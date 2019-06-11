@@ -26,6 +26,7 @@
 #include "oled_main.h"
 #include "oled_freetype.h"
 #include "oled_driver.h"
+#include "oled_picture.h"
 
 typedef struct
 {
@@ -39,6 +40,7 @@ tArgs vArgs[] =
 	{ "-b", " --setBrightness		", "Args: brightness\n\tSet oled brightness" },
 	{ "-c", " --clear			", "Args: No argumens\n\tClear oled display" },
         { "-d", " --deepStandby		", "Args: No argumens\n\tEnter deep standby" },
+	{ "-p", " --showPicture		", "Args: No argumens\n\tShow picture" },
 	{ "-tu", " --setTextUp		", "Args: text\n\tSet text to oled in up" },
 	{ "-tc", " --setTextCenter		", "Args: text\n\tSet text to oled in center" },
 	{ "-td", " --setTextDown		", "Args: text\n\tSet text to oled in down" },
@@ -107,6 +109,22 @@ int main(int argc, char *argv[])
 				/* enter in deep standby */
 				lcd_deepstandby();
 			}
+			else if ((strcmp(argv[i], "-p") == 0) || (strcmp(argv[i], "--showPicture") == 0))
+			{
+				if (i + 1 <= argc)
+				{
+					const char *filename;
+					if (argv[i + 1] == NULL)
+					{
+						fprintf(stderr, "Missing filename value\n");
+						usage(argv[0], NULL);
+					}
+					filename = argv[i + 1];
+					/* set display picture */
+					show_image(filename);
+				}
+				i += 1;
+			}
 			else if ((strcmp(argv[i], "-tu") == 0) || (strcmp(argv[i], "--setTextUp") == 0))
 			{
 				if (i + 1 <= argc)
@@ -120,7 +138,7 @@ int main(int argc, char *argv[])
 					text = argv[i + 1];
 					/* set display text */
 					lcd_print_text_up(text, LCD_UP_COLOR, NULL, TEXT_ALIGN_CENTER);
-					lcd_draw();
+					lcd_draw_text();
 				}
 				i += 1;
 			}
@@ -137,7 +155,7 @@ int main(int argc, char *argv[])
 					text = argv[i + 1];
 					/* set display text */
 					lcd_print_text_center(text, LCD_CENTER_COLOR, NULL, TEXT_ALIGN_CENTER);
-					lcd_draw();
+					lcd_draw_text();
 				}
 				i += 1;
 			}
@@ -154,7 +172,7 @@ int main(int argc, char *argv[])
 					text = argv[i + 1];
 					/* set display text */
 					lcd_print_text_down(text, LCD_DOWN_COLOR, NULL, TEXT_ALIGN_CENTER);
-					lcd_draw();
+					lcd_draw_text();
 				}
 				i += 1;
 			}
@@ -171,7 +189,7 @@ int main(int argc, char *argv[])
 					text = argv[i + 1];
 					/* set display text */
 					lcd_print_text_up_different(text, LCD_UP_COLOR_DIFFERENT, NULL, TEXT_ALIGN_CENTER);
-					lcd_draw();
+					lcd_draw_text();
 				}
 				i += 1;
 			}
@@ -188,7 +206,7 @@ int main(int argc, char *argv[])
 					text = argv[i + 1];
 					/* set display text */
 					lcd_print_text_center_different(text, LCD_CENTER_COLOR_DIFFERENT, NULL, TEXT_ALIGN_CENTER);
-					lcd_draw();
+					lcd_draw_text();
 				}
 				i += 1;
 			}
@@ -205,7 +223,7 @@ int main(int argc, char *argv[])
 					text = argv[i + 1];
 					/* set display text */
 					lcd_print_text_down_different(text, LCD_DOWN_COLOR_DIFFERENT, NULL, TEXT_ALIGN_CENTER);
-					lcd_draw();
+					lcd_draw_text();
 				}
 				i += 1;
 			}

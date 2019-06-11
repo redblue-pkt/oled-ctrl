@@ -176,17 +176,45 @@ void lcd_setpixel(int x, int y, uint32_t data)
 	green = (data & 0x0000FF00) >> 8;
 	red = (data & 0x00FF0000) >> 16;
 
+	unsigned char* buffer = (unsigned char*) &lcd_buffer[0];
 	int location = (y * xres + x) * 4;
+	//int location = (y * xres + x) / 4;
 
-	lcd_buffer[location+0]=blue;
-	lcd_buffer[location+1]=green;
-	lcd_buffer[location+2]=red;
-	lcd_buffer[location+3]=0xff;
+	buffer[location+0]=blue;
+	buffer[location+1]=green;
+	buffer[location+2]=red;
+	buffer[location+3]=0xff;
 }
 
-void lcd_draw()
+void lcd_draw_text()
 {
 	write(fd, lcd_buffer, yres * stride);
+}
+
+void lcd_draw_picture()
+{
+	int i;
+	bool refreshAll = false;
+	for (i = 0; i < yres * stride; i++)
+	{
+		if (lcd_buffer[i] != lcd_backbuffer[i])
+		{
+			refreshAll = true;
+			break;
+		}
+	}
+
+	if (refreshAll)
+	{
+		for (i = 0; i < yres * stride; i++)
+		{
+			lcd_backbuffer[i] = lcd_buffer[i];
+		}
+		unsigned char* buffer = (unsigned char*) &lcd_buffer[0];
+		{
+			write(fd, buffer, yres * stride);
+		}
+	}
 }
 
 int lcd_clear()
@@ -196,7 +224,7 @@ int lcd_clear()
 		printf("%s: cannot clear lcd device\n", __FUNCTION__);
 		return -1;
 	}
-	lcd_draw();
+	lcd_draw_text();
 	return 0;
 }
 
@@ -216,6 +244,11 @@ int lcd_close()
 	{
 		free(lcd_buffer);
 		lcd_buffer = 0;
+	}
+	if (lcd_backbuffer)
+	{
+		free(lcd_backbuffer);
+		lcd_backbuffer = 0;
 	}
 	if (-1 != fd)
 	{
@@ -247,6 +280,14 @@ int driver_start(const char *dev, int mode, int user_brightness, int x_res, int 
 
 	if (lcd_buffer == NULL) {
 		printf("%s: lcd_buffer could not be allocated: malloc() failed\n", __FUNCTION__);
+		return -1;
+	}
+	lcd_backbuffer = (unsigned char *)malloc(yres * stride);
+	if (lcd_backbuffer)
+		memset(lcd_backbuffer, 0, yres * stride);
+
+	if (lcd_backbuffer == NULL) {
+		printf("%s: lcd_backbuffer could not be allocated: malloc() failed\n", __FUNCTION__);
 		return -1;
 	}
         int tmp;
@@ -320,7 +361,7 @@ int lcd_ioctl(const char *io_ctl)
                 printf("%s: command %s failed\n", __FUNCTION__, io_ctl);
                 return -1;
         }
-        lcd_draw();
+        lcd_draw_text();
         return 0;
 }
 

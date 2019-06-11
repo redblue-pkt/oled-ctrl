@@ -1,0 +1,267 @@
+/*
+    fbv  --  simple image viewer for the linux framebuffer
+    Copyright (C) 2002  Tomasz Sterna
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+*/
+
+#include "config.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#include "oled_bmp.h"
+#include "oled_main.h"
+
+int fh_bmp_id(const char *name)
+{
+	int fd;
+	char id[2];
+
+	fd = open(name, O_RDONLY);
+	if (fd == -1) {
+		return(0);
+	}
+
+	read(fd, id, 2);
+	close(fd);
+	if ( id[0]=='B' && id[1]=='M' ) {
+		return(1);
+	}
+	return(0);
+}
+
+static inline void fetch_pallete(int fd, struct color pallete[], int count)
+{
+	unsigned char buff[4];
+	int i;
+
+	lseek(fd, BMP_COLOR_OFFSET, SEEK_SET);
+	for (i=0; i<count; i++) {
+		read(fd, buff, 4);
+		pallete[i].red = buff[2];
+		pallete[i].green = buff[1];
+		pallete[i].blue = buff[0];
+	}
+	return;
+}
+
+int fh_bmp_load(const char *name, unsigned char **buffer, int* xp, int* yp)
+{
+	int fd, bpp, raster, i, j, k, skip, x=*xp, y=*yp;
+	unsigned char buff[4];
+	unsigned char *wr_buffer = *buffer + x*(y-1)*3;
+	struct color pallete[256];
+
+	fd = open(name, O_RDONLY);
+	if (fd == -1) {
+		return(FH_ERROR_FILE);
+	}
+
+	if (lseek(fd, BMP_TORASTER_OFFSET, SEEK_SET) == -1) {
+		close(fd);//Resource leak: fd
+		return(FH_ERROR_FORMAT);
+	}
+
+	read(fd, buff, 4);
+	raster = buff[0] + (buff[1]<<8) + (buff[2]<<16) + (buff[3]<<24);
+
+	if (lseek(fd, BMP_BPP_OFFSET, SEEK_SET) == -1) {
+		close(fd);
+		return(FH_ERROR_FORMAT);
+	}
+
+	read(fd, buff, 2);
+	bpp = buff[0] + (buff[1]<<8);
+
+	switch (bpp){
+		case 1: /* monochrome */
+			skip = fill4B(x/8 + ((x%8) ? 1 : 0));
+			lseek(fd, raster, SEEK_SET);
+			{
+				int bytes=x/8;
+				if(x%8 >0)
+					bytes++;
+				unsigned char* tbuffer = (unsigned char*) malloc(bytes);
+				if(tbuffer==NULL)
+				{
+					printf("Error: malloc\n");
+					close(fd);
+					return (FH_ERROR_MALLOC);
+				}
+				for (i=0; i<y; i++) {
+					read(fd, tbuffer, bytes);
+					for (j=0; j<x/8; j++) {
+						for (k=0; k<8; k++) {
+							if (tbuffer[j] & 0x80) {
+								*wr_buffer++ = 0xff;
+								*wr_buffer++ = 0xff;
+								*wr_buffer++ = 0xff;
+							} else {
+								*wr_buffer++ = 0x00;
+								*wr_buffer++ = 0x00;
+								*wr_buffer++ = 0x00;
+							}
+							tbuffer[j] = tbuffer[j]<<1;
+						}
+
+					}
+					if (x%8) {
+						for (k=0; k<x%8; k++) {
+							if (tbuffer[j] & 0x80) {
+								*wr_buffer++ = 0xff;
+								*wr_buffer++ = 0xff;
+								*wr_buffer++ = 0xff;
+							} else {
+								*wr_buffer++ = 0x00;
+								*wr_buffer++ = 0x00;
+								*wr_buffer++ = 0x00;
+							}
+							tbuffer[j] = tbuffer[j]<<1;
+						}
+
+					}
+					if (skip) {
+						read(fd, tbuffer, skip);
+					}
+					wr_buffer -= x*6; /* backoff 2 lines - x*2 *3 */
+				}
+				free(tbuffer);
+			}
+			break;
+		case 4: /* 4bit palletized */
+		{
+			skip = fill4B(x/2+x%2);
+			fetch_pallete(fd, pallete, 16);
+			lseek(fd, raster, SEEK_SET);
+			unsigned char* tbuffer = (unsigned char*) malloc(x/2+1);
+			if(tbuffer==NULL)
+			{
+				printf("Error: malloc\n");
+				close(fd);
+				return (FH_ERROR_MALLOC);
+			}
+			unsigned char c1,c2;
+			for (i=0; i<y; i++) {
+				read(fd, tbuffer, x/2 + x%2);
+				for (j=0; j<x/2; j++) {
+					c1 = tbuffer[j]>>4;
+					c2 = tbuffer[j] & 0x0f;
+					*wr_buffer++ = pallete[c1].red;
+					*wr_buffer++ = pallete[c1].green;
+					*wr_buffer++ = pallete[c1].blue;
+					*wr_buffer++ = pallete[c2].red;
+					*wr_buffer++ = pallete[c2].green;
+					*wr_buffer++ = pallete[c2].blue;
+				}
+				if (x%2) {
+					c1 = tbuffer[j]>>4;
+					*wr_buffer++ = pallete[c1].red;
+					*wr_buffer++ = pallete[c1].green;
+					*wr_buffer++ = pallete[c1].blue;
+				}
+				if (skip) {
+					read(fd, buff, skip);
+				}
+				wr_buffer -= x*6; /* backoff 2 lines - x*2 *3 */
+			}
+			free(tbuffer);
+		}
+		break;
+		case 8: /* 8bit palletized */
+		{
+			skip = fill4B(x);
+			fetch_pallete(fd, pallete, 256);
+			lseek(fd, raster, SEEK_SET);
+			unsigned char* tbuffer = (unsigned char*) malloc(x);
+			if(tbuffer==NULL)
+			{
+				printf("Error: malloc\n");
+				close(fd);
+				return (FH_ERROR_MALLOC);
+			}
+			for (i=0; i<y; i++)
+		   {
+				read(fd, tbuffer, x);
+				for (j=0; j<x; j++) {
+					wr_buffer[j*3] = pallete[tbuffer[j]].red;
+					wr_buffer[j*3+1] = pallete[tbuffer[j]].green;
+					wr_buffer[j*3+2] = pallete[tbuffer[j]].blue;
+				}
+				if (skip) {
+					read(fd, buff, skip);
+				}
+				wr_buffer -= x*3; /* backoff 2 lines - x*2 *3 */
+			}
+			free(tbuffer);
+		}
+		break;
+		case 16: /* 16bit RGB */
+			close(fd);
+			return(FH_ERROR_FORMAT);
+			break;
+		case 24: /* 24bit RGB */
+			skip = fill4B(x*3);
+			lseek(fd, raster, SEEK_SET);
+			unsigned char c;
+			for (i=0; i<y; i++)
+			{
+				read(fd,wr_buffer,x*3);
+				for(j=0; j < x*3 ; j=j+3)
+				{
+					c=wr_buffer[j];
+					wr_buffer[j]=wr_buffer[j+2];
+					wr_buffer[j+2]=c;
+				}
+				if (skip) {
+					read(fd, buff, skip);
+				}
+				wr_buffer -= x*3; // backoff 1 lines - x*3
+			}
+			break;
+		default:
+			close(fd);
+			return(FH_ERROR_FORMAT);
+	}
+
+	close(fd);
+	return(FH_ERROR_OK);
+}
+
+int fh_bmp_getsize(const char *name, int *x, int *y)
+{
+	int fd;
+	unsigned char size[4];
+
+	fd = open(name, O_RDONLY);
+	if (fd == -1) {
+		return(FH_ERROR_FILE);
+	}
+	if (lseek(fd, BMP_SIZE_OFFSET, SEEK_SET) == -1) {
+		return(FH_ERROR_FORMAT);
+	}
+
+	read(fd, size, 4);
+	*x = size[0] + (size[1]<<8) + (size[2]<<16) + (size[3]<<24);
+//	*x-=1;
+	read(fd, size, 4);
+	*y = size[0] + (size[1]<<8) + (size[2]<<16) + (size[3]<<24);
+
+	close(fd);
+	return(FH_ERROR_OK);
+}

@@ -25,9 +25,15 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+#ifndef _OLED_GIF_H_
 typedef enum { false = 0, true = !false } bool;
+#endif
+
+//typedef int bool;
+//enum { false, true };
 static int fd = -1, bpp = 0, xres = 0, yres = 0, stride = 0;
 static unsigned char * lcd_buffer = NULL;
+static unsigned char * lcd_backbuffer = NULL;
 
 #define RED(x)   (x >> 16) & 0xff;
 #define GREEN(x) (x >> 8) & 0xff;
@@ -43,7 +49,8 @@ int lcd_open(const char *dev, int mode, int x_res, int y_res);
 int lcd_setmode(int mode);
 int lcd_brightness(int brightness);
 void lcd_setpixel(int x, int y, uint32_t data);
-void lcd_draw();
+void lcd_draw_text();
+void lcd_draw_picture();
 int lcd_clear();
 int lcd_get_xres();
 int lcd_get_yres();

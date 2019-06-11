@@ -84,4 +84,9 @@
 #define LCD_ASC_MODE LCD_MODE_ASC
 #define LCD_BIN_MODE LCD_MODE_BIN
 
+#define FH_ERROR_OK 0
+#define FH_ERROR_FILE 1         /* read/access error */
+#define FH_ERROR_FORMAT 2       /* file format error */
+#define FH_ERROR_MALLOC 3       /* error during malloc */
+
 #endif
