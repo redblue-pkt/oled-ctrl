@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
 					driver_init();
 					lcd_clear();
 					init_freetype();
-					lcd_print_text_up(text, LCD_UP_COLOR, NULL, TEXT_ALIGN_CENTER);
+					lcd_print_text_up(text, LCD_UP_COLOR, 0, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
 				i += 1;
@@ -182,7 +182,7 @@ int main(int argc, char *argv[])
 					driver_init();
 					lcd_clear();
 					init_freetype();
-					lcd_print_text_center(text, LCD_CENTER_COLOR, NULL, TEXT_ALIGN_CENTER);
+					lcd_print_text_center(text, LCD_CENTER_COLOR, 0, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
 				i += 1;
@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
 					driver_init();
 					lcd_clear();
 					init_freetype();
-					lcd_print_text_down(text, LCD_DOWN_COLOR, NULL, TEXT_ALIGN_CENTER);
+					lcd_print_text_down(text, LCD_DOWN_COLOR, 0, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
 				i += 1;
@@ -222,7 +222,7 @@ int main(int argc, char *argv[])
 					driver_init();
 					lcd_clear();
 					init_freetype();
-					lcd_print_text_up_different(text, LCD_UP_COLOR_DIFFERENT, NULL, TEXT_ALIGN_CENTER);
+					lcd_print_text_up_different(text, LCD_UP_COLOR_DIFFERENT, 0, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
 				i += 1;
@@ -241,7 +241,7 @@ int main(int argc, char *argv[])
 					/* set display text */
 					driver_init();
 					init_freetype();
-					lcd_print_text_center_different(text, LCD_CENTER_COLOR_DIFFERENT, NULL, TEXT_ALIGN_CENTER);
+					lcd_print_text_center_different(text, LCD_CENTER_COLOR_DIFFERENT, 0, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
 				i += 1;
@@ -261,7 +261,7 @@ int main(int argc, char *argv[])
 					driver_init();
 					lcd_clear();
 					init_freetype();
-					lcd_print_text_down_different(text, LCD_DOWN_COLOR_DIFFERENT, NULL, TEXT_ALIGN_CENTER);
+					lcd_print_text_down_different(text, LCD_DOWN_COLOR_DIFFERENT, 0, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
 				i += 1;
