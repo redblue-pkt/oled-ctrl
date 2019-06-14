@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
 			}
 			else if ((strcmp(argv[i], "-tc") == 0) || (strcmp(argv[i], "--setTextCenter") == 0))
 			{
-				if (i + 1 <= argc)
+				if (i + 2 <= argc)
 				{
 					const char *text;
 					const char *tmp_color;
@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
 			}
 			else if ((strcmp(argv[i], "-td") == 0) || (strcmp(argv[i], "--setTextDown") == 0))
 			{
-				if (i + 1 <= argc)
+				if (i + 2 <= argc)
 				{
 					const char *text;
 					const char *tmp_color;
@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
 			}
 			else if ((strcmp(argv[i], "-tud") == 0) || (strcmp(argv[i], "--setTextUpDifferent") == 0))
 			{
-				if (i + 1 <= argc)
+				if (i + 2 <= argc)
 				{
 					const char *text;
 					const char *tmp_color;
@@ -274,7 +274,7 @@ int main(int argc, char *argv[])
 			}
 			else if ((strcmp(argv[i], "-tcd") == 0) || (strcmp(argv[i], "--setTextUpDifferent") == 0))
 			{
-				if (i + 1 <= argc)
+				if (i + 2 <= argc)
 				{
 					const char *text;
 					const char *tmp_color;
@@ -304,7 +304,7 @@ int main(int argc, char *argv[])
 			}
 			else if ((strcmp(argv[i], "-tdd") == 0) || (strcmp(argv[i], "--setTextDownDifferent") == 0))
 			{
-				if (i + 1 <= argc)
+				if (i + 2 <= argc)
 				{
 					const char *text;
 					const char *tmp_color;
