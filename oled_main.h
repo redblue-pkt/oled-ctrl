@@ -46,6 +46,8 @@
 #ifndef _MAIN_OLED_H_
 #define _MAIN_OLED_H_
 
+char vumodel[63];
+
 #define LCD_UP_X 0.5 // 50% of display width
 #define LCD_UP_Y 0.30 // like the X axis (same margin)
 #define LCD_UP_SIZE 0.10 // 10% of display width

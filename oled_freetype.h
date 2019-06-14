@@ -37,6 +37,8 @@ static FT_GlyphSlot freetype_slot;
 static FT_GlyphSlot freetype_lcd_slot;
 static FT_GlyphSlot freetype_symbols_slot;
 
+extern char vumodel[63];
+
 int init_freetype();
 void deinit_freetype();
 int render_lcd_symbol(int code, int x, int y, int width, int color, int font_size, int align);

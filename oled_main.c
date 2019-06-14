@@ -53,8 +53,28 @@ tArgs vArgs[] =
 void usage(char *prg, char *cmd)
 {
 	int i;
+
+	FILE *fvu = fopen("/proc/stb/info/vumodel", "r");
+	if (fvu) {
+		char tmp[63];
+		if (fscanf(fvu, "%s", &tmp) == 1) {
+			strcpy(vumodel, tmp);
+		}
+		fclose(fvu);
+	}
+
 	/* or printout a default usage */
-	fprintf(stderr, "Oled control tool, version 1.00 (VU ARM)\n");
+	fprintf(stderr, "Oled control tool, version 1.01\n");
+	if (fvu)
+	{
+		fprintf(stderr, "Found vu stb: %s\n", vumodel);
+	}
+	else
+	{
+		fprintf(stderr, "This stb is not supported\n");
+		exit(1);
+	}
+	fprintf(stderr, "\n");
 	fprintf(stderr, "General usage:\n\n");
 	fprintf(stderr, "%s argument [optarg1] [optarg2]\n", prg);
 

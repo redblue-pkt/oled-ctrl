@@ -32,8 +32,6 @@
 #include "icomoon_font.h"
 #include "oled_freetype.h"
 
-#define vumodel "solo4k" //FIX ME
-
 int init_freetype()
 {
 	if (FT_Init_FreeType(&freetype_library) != 0)
