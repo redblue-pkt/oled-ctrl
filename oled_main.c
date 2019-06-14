@@ -41,12 +41,12 @@ tArgs vArgs[] =
 	{ "-c", " --clear			", "Args: No argumens\n\tClear oled display" },
         { "-d", " --deepStandby		", "Args: No argumens\n\tEnter deep standby" },
 	{ "-p", " --showPicture		", "Args: picture location\n\tShow picture" },
-	{ "-tu", " --setTextUp		", "Args: text\n\tSet text to oled in up" },
-	{ "-tc", " --setTextCenter		", "Args: text\n\tSet text to oled in center" },
-	{ "-td", " --setTextDown		", "Args: text\n\tSet text to oled in down" },
-	{ "-tud", " --setTextUpDifferent	", "Args: text\n\tSet text to oled in up" },
-	{ "-tcd", " --setTextCenterDifferent	", "Args: text\n\tSet text to oled in center" },
-	{ "-tdd", " --setTextDownDifferent	", "Args: text\n\tSet text to oled in down" },
+	{ "-tu", " --setTextUp		", "Args1: text\tArgs2: color in hex\n\tSet color text to oled in up (Args2 are optional)" },
+	{ "-tc", " --setTextCenter		", "Args1: text\tArgs2: color in hex\n\tSet color text to oled in center (Args2 are optional)" },
+	{ "-td", " --setTextDown		", "Args1: text\tArgs2: color in hex\n\tSet color text to oled in down (Args2 are optional)" },
+	{ "-tud", " --setTextUpDifferent	", "Args1: text\tArgs2: color in hex\n\tSet color text to oled in up (Args2 are optional)" },
+	{ "-tcd", " --setTextCenterDifferent	", "Args1: text\tArgs2: color in hex\n\tSet color text to oled in center (Args2 are optional)" },
+	{ "-tdd", " --setTextDownDifferent	", "Args1: text\tArgs2: color in hex\n\tSet color text to oled in down (Args2 are optional)" },
 	{ NULL, NULL, NULL }
 };
 
@@ -76,7 +76,7 @@ void usage(char *prg, char *cmd)
 	}
 	fprintf(stderr, "\n");
 	fprintf(stderr, "General usage:\n\n");
-	fprintf(stderr, "%s argument [optarg1] [optarg2]\n", prg);
+	fprintf(stderr, "%s argument [optarg1] [optarg2] [optarg3]\n", prg);
 
 	for (i = 0; ; i++)
 	{
@@ -92,6 +92,7 @@ int main(int argc, char *argv[])
 {
 	int i;
 	if (argc > 1)
+
 	{
 		i = 1;
 		while (i < argc)
@@ -149,122 +150,188 @@ int main(int argc, char *argv[])
 			}
 			else if ((strcmp(argv[i], "-tu") == 0) || (strcmp(argv[i], "--setTextUp") == 0))
 			{
-				if (i + 1 <= argc)
+				if (i + 2 <= argc)
 				{
 					const char *text;
+					const char *tmp_color;
+					int color;
 					if (argv[i + 1] == NULL)
 					{
 						fprintf(stderr, "Missing text value\n");
 						usage(argv[0], NULL);
+					}
+					if (argv[i + 2] == NULL)
+					{
+						color = LCD_UP_COLOR;
+					}
+					else
+					{
+						tmp_color = argv[i + 2];
+						color = (int)strtol(tmp_color, NULL, 0);
 					}
 					text = argv[i + 1];
 					/* set display text */
 					driver_init();
 					lcd_clear();
 					init_freetype();
-					lcd_print_text_up(text, LCD_UP_COLOR, 0, TEXT_ALIGN_CENTER);
+					lcd_print_text_up(text, color, 0, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
-				i += 1;
+				i += 2;
 			}
 			else if ((strcmp(argv[i], "-tc") == 0) || (strcmp(argv[i], "--setTextCenter") == 0))
 			{
 				if (i + 1 <= argc)
 				{
 					const char *text;
+					const char *tmp_color;
+					int color;
 					if (argv[i + 1]== NULL)
 					{
 						fprintf(stderr, "Missing text value\n");
 						usage(argv[0], NULL);
+					}
+					if (argv[i + 2] == NULL)
+					{
+						color = LCD_CENTER_COLOR;
+					}
+					else
+					{
+						tmp_color = argv[i + 2];
+						color = (int)strtol(tmp_color, NULL, 0);
 					}
 					text = argv[i + 1];
 					/* set display text */
 					driver_init();
 					lcd_clear();
 					init_freetype();
-					lcd_print_text_center(text, LCD_CENTER_COLOR, 0, TEXT_ALIGN_CENTER);
+					lcd_print_text_center(text, color, 0, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
-				i += 1;
+				i += 2;
 			}
 			else if ((strcmp(argv[i], "-td") == 0) || (strcmp(argv[i], "--setTextDown") == 0))
 			{
 				if (i + 1 <= argc)
 				{
 					const char *text;
+					const char *tmp_color;
+					int color;
 					if (argv[i + 1] == NULL)
 					{
 						fprintf(stderr, "Missing text value\n");
 						usage(argv[0], NULL);
+					}
+					if (argv[i + 2] == NULL)
+					{
+						color = LCD_DOWN_COLOR;
+					}
+					else
+					{
+						tmp_color = argv[i + 2];
+						color = (int)strtol(tmp_color, NULL, 0);
 					}
 					text = argv[i + 1];
 					/* set display text */
 					driver_init();
 					lcd_clear();
 					init_freetype();
-					lcd_print_text_down(text, LCD_DOWN_COLOR, 0, TEXT_ALIGN_CENTER);
+					lcd_print_text_down(text, color, 0, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
-				i += 1;
+				i += 2;
 			}
 			else if ((strcmp(argv[i], "-tud") == 0) || (strcmp(argv[i], "--setTextUpDifferent") == 0))
 			{
 				if (i + 1 <= argc)
 				{
 					const char *text;
+					const char *tmp_color;
+					int color;
 					if (argv[i + 1] == NULL)
 					{
 						fprintf(stderr, "Missing text value\n");
 						usage(argv[0], NULL);
+					}
+					if (argv[i + 2] == NULL)
+					{
+						color = LCD_UP_COLOR_DIFFERENT;
+					}
+					else
+					{
+						tmp_color = argv[i + 2];
+						color = (int)strtol(tmp_color, NULL, 0);
 					}
 					text = argv[i + 1];
 					/* set display text */
 					driver_init();
 					lcd_clear();
 					init_freetype();
-					lcd_print_text_up_different(text, LCD_UP_COLOR_DIFFERENT, 0, TEXT_ALIGN_CENTER);
+					lcd_print_text_up_different(text, color, 0, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
-				i += 1;
+				i += 2;
 			}
 			else if ((strcmp(argv[i], "-tcd") == 0) || (strcmp(argv[i], "--setTextUpDifferent") == 0))
 			{
 				if (i + 1 <= argc)
 				{
 					const char *text;
+					const char *tmp_color;
+					int color;
 					if (argv[i + 1] == NULL)
 					{
 						fprintf(stderr, "Missing text value\n");
 						usage(argv[0], NULL);
 					}
+					if (argv[i + 2] == NULL)
+					{
+						color = LCD_CENTER_COLOR_DIFFERENT;
+					}
+					else
+					{
+						tmp_color = argv[i + 2];
+						color = (int)strtol(tmp_color, NULL, 0);
+					}
 					text = argv[i + 1];
 					/* set display text */
 					driver_init();
 					init_freetype();
-					lcd_print_text_center_different(text, LCD_CENTER_COLOR_DIFFERENT, 0, TEXT_ALIGN_CENTER);
+					lcd_print_text_center_different(text, color, 0, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
-				i += 1;
+				i += 2;
 			}
 			else if ((strcmp(argv[i], "-tdd") == 0) || (strcmp(argv[i], "--setTextDownDifferent") == 0))
 			{
 				if (i + 1 <= argc)
 				{
 					const char *text;
+					const char *tmp_color;
+					int color;
 					if (argv[i + 1] == NULL)
 					{
 						fprintf(stderr, "Missing text value\n");
 						usage(argv[0], NULL);
+					}
+					if (argv[i + 2] == NULL)
+					{
+						color = LCD_DOWN_COLOR_DIFFERENT;
+					}
+					else
+					{
+						tmp_color = argv[i + 2];
+						color = (int)strtol(tmp_color, NULL, 0);
 					}
 					text = argv[i + 1];
 					/* set display text */
 					driver_init();
 					lcd_clear();
 					init_freetype();
-					lcd_print_text_down_different(text, LCD_DOWN_COLOR_DIFFERENT, 0, TEXT_ALIGN_CENTER);
+					lcd_print_text_down_different(text, color, 0, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
-				i += 1;
+				i += 2;
 			}
 			else
 			{

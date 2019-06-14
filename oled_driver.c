@@ -315,9 +315,10 @@ void lcd_draw_character(FT_Bitmap* bitmap, FT_Int x, FT_Int y, int color)
 {
 	int i, j, z = 0;
 	long int location = 0;
-	unsigned char red = RED(color);
-	unsigned char green = GREEN(color);
+
 	unsigned char blue = BLUE(color);
+	unsigned char green = GREEN(color);
+	unsigned char red = RED(color);
 
 	red = (red >> 3) & 0x1f;
 	green = (green >> 3) & 0x1f;
@@ -334,9 +335,9 @@ void lcd_draw_character(FT_Bitmap* bitmap, FT_Int x, FT_Int y, int color)
 					(i * stride);
 
 				if (bpp == 32) {
-					lcd_buffer[location] = RED(color);
+					lcd_buffer[location] = BLUE(color);
 					lcd_buffer[location + 1] = GREEN(color);
-					lcd_buffer[location + 2] = BLUE(color) ;
+					lcd_buffer[location + 2] = RED(color) ;
 					lcd_buffer[location + 3] = 0xff;
 				} else {
 					lcd_buffer[location] = red << 3 | green >> 2;

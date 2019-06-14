@@ -48,35 +48,37 @@
 
 char vumodel[63];
 
+#define FONT_COLOR 0xffffffff // white 0xffffffff
+
 #define LCD_UP_X 0.5 // 50% of display width
 #define LCD_UP_Y 0.30 // like the X axis (same margin)
 #define LCD_UP_SIZE 0.10 // 10% of display width
-#define LCD_UP_COLOR 0xffffffff
+#define LCD_UP_COLOR FONT_COLOR
 
 #define LCD_CENTER_X 0.5 // 50% of display width
 #define LCD_CENTER_Y 0.55 // 55% of display width (keep proportion with x axis)
 #define LCD_CENTER_SIZE 0.10 // 10% of display width
-#define LCD_CENTER_COLOR 0xffffffff
+#define LCD_CENTER_COLOR FONT_COLOR
 
 #define LCD_DOWN_X 0.5 // 50% of display width
 #define LCD_DOWN_Y 0.80 // 80% like the X axis (same margin)
 #define LCD_DOWN_SIZE 0.10 // 10% of display width
-#define LCD_DOWN_COLOR 0xffffffff
+#define LCD_DOWN_COLOR FONT_COLOR
 
 #define LCD_UP_X_DIFFERENT 0.5 // 50% of display width
 #define LCD_UP_Y_DIFFERENT 0.35 // 35% like the X axis (same margin)
 #define LCD_UP_SIZE_DIFFERENT 0.13 // 13% of display width
-#define LCD_UP_COLOR_DIFFERENT 0xffffffff
+#define LCD_UP_COLOR_DIFFERENT FONT_COLOR
 
 #define LCD_CENTER_X_DIFFERENT 0.5 // 50% of display width
 #define LCD_CENTER_Y_DIFFERENT 0.55 // 55% of display width (keep proportion with x axis)
 #define LCD_CENTER_SIZE_DIFFERENT 0.15 // 15% of display width
-#define LCD_CENTER_COLOR_DIFFERENT 0xffffffff
+#define LCD_CENTER_COLOR_DIFFERENT FONT_COLOR
 
 #define LCD_DOWN_X_DIFFERENT 0.5 // 50% of display width
 #define LCD_DOWN_Y_DIFFERENT 0.75 // 75% like the X axis (same margin)
 #define LCD_DOWN_SIZE_DIFFERENT 0.13 // 13% of display width
-#define LCD_DOWN_COLOR_DIFFERENT 0xffffffff
+#define LCD_DOWN_COLOR_DIFFERENT FONT_COLOR
 
 #define LCD_DEVICE "/dev/oled0"
 
