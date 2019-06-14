@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) redblue 2018
+ *   Copyright (C) redblue 2019
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@
  * Based on https://github.com/oe-alliance/openmultiboot
  *
  * Based on https://github.com/Duckbox-Developers/apps/blob/master/tools/fp_control/fp_control.c
+ *
+ * Based on https://github.com/godspeed1989/fbv
  */
 
 /*
@@ -43,8 +45,6 @@
 
 #ifndef _MAIN_OLED_H_
 #define _MAIN_OLED_H_
-
-#include "lcd-ks0713.h"
 
 #define LCD_UP_X 0.5 // 50% of display width
 #define LCD_UP_Y 0.30 // like the X axis (same margin)

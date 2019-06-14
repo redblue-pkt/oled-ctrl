@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) redblue 2018
+ *   Copyright (C) redblue 2019
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 #include <string.h>
 #include "lcd-ks0713.h"
 #include "oled_driver.h"
+#include "oled_main.h"
 
 int lcd_read_value(const char *filename)
 {
@@ -302,8 +303,12 @@ int driver_start(const char *dev, int mode, int user_brightness, int x_res, int 
 			return -1;
 		}
 	}
-	lcd_clear();
 	return 0;
+}
+
+int driver_init()
+{
+	return driver_start(LCD_DEVICE, LCD_ASC_MODE, LCD_MY_BRIGHTNESS, LCD_MY_XRES, LCD_MY_YRES);
 }
 
 void lcd_draw_character(FT_Bitmap* bitmap, FT_Int x, FT_Int y, int color)

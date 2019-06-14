@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) redblue 2018
+ *   Copyright (C) redblue 2019
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -57,6 +57,7 @@ int lcd_get_yres();
 int lcd_close();
 int driver_close();
 int driver_start(const char *dev, int mode, int _brightness, int x_res, int y_res);
+int driver_init();
 void lcd_draw_character(FT_Bitmap* bitmap, FT_Int x, FT_Int y, int color);
 void lcd_write_text(const char* text);
 int lcd_ioctl(const char *io_ctl);

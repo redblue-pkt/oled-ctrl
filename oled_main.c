@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) redblue 2018
+ *   Copyright (C) redblue 2019
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ tArgs vArgs[] =
 	{ "-b", " --setBrightness		", "Args: brightness\n\tSet oled brightness" },
 	{ "-c", " --clear			", "Args: No argumens\n\tClear oled display" },
         { "-d", " --deepStandby		", "Args: No argumens\n\tEnter deep standby" },
-	{ "-p", " --showPicture		", "Args: No argumens\n\tShow picture" },
+	{ "-p", " --showPicture		", "Args: picture location\n\tShow picture" },
 	{ "-tu", " --setTextUp		", "Args: text\n\tSet text to oled in up" },
 	{ "-tc", " --setTextCenter		", "Args: text\n\tSet text to oled in center" },
 	{ "-td", " --setTextDown		", "Args: text\n\tSet text to oled in down" },
@@ -70,8 +70,6 @@ void usage(char *prg, char *cmd)
 
 int main(int argc, char *argv[])
 {
-	driver_start(LCD_DEVICE, LCD_BIN_MODE, LCD_MY_BRIGHTNESS, LCD_MY_XRES, LCD_MY_YRES);
-	init_freetype();
 	int i;
 	if (argc > 1)
 	{
@@ -102,11 +100,13 @@ int main(int argc, char *argv[])
 			else if ((strcmp(argv[i], "-c") == 0) || (strcmp(argv[i], "--clear") == 0))
 			{
 				/* clear the display */
+				driver_init();
 				lcd_clear();
 			}
 			else if ((strcmp(argv[i], "-d") == 0) || (strcmp(argv[i], "--deepStandby") == 0))
 			{
 				/* enter in deep standby */
+				driver_init();
 				lcd_deepstandby();
 			}
 			else if ((strcmp(argv[i], "-p") == 0) || (strcmp(argv[i], "--showPicture") == 0))
@@ -121,6 +121,8 @@ int main(int argc, char *argv[])
 					}
 					filename = argv[i + 1];
 					/* set display picture */
+					driver_init();
+					lcd_clear();
 					show_image(filename);
 				}
 				i += 1;
@@ -137,6 +139,9 @@ int main(int argc, char *argv[])
 					}
 					text = argv[i + 1];
 					/* set display text */
+					driver_init();
+					lcd_clear();
+					init_freetype();
 					lcd_print_text_up(text, LCD_UP_COLOR, NULL, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
@@ -154,6 +159,9 @@ int main(int argc, char *argv[])
 					}
 					text = argv[i + 1];
 					/* set display text */
+					driver_init();
+					lcd_clear();
+					init_freetype();
 					lcd_print_text_center(text, LCD_CENTER_COLOR, NULL, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
@@ -171,6 +179,9 @@ int main(int argc, char *argv[])
 					}
 					text = argv[i + 1];
 					/* set display text */
+					driver_init();
+					lcd_clear();
+					init_freetype();
 					lcd_print_text_down(text, LCD_DOWN_COLOR, NULL, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
@@ -188,6 +199,9 @@ int main(int argc, char *argv[])
 					}
 					text = argv[i + 1];
 					/* set display text */
+					driver_init();
+					lcd_clear();
+					init_freetype();
 					lcd_print_text_up_different(text, LCD_UP_COLOR_DIFFERENT, NULL, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
@@ -205,6 +219,8 @@ int main(int argc, char *argv[])
 					}
 					text = argv[i + 1];
 					/* set display text */
+					driver_init();
+					init_freetype();
 					lcd_print_text_center_different(text, LCD_CENTER_COLOR_DIFFERENT, NULL, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
@@ -222,6 +238,9 @@ int main(int argc, char *argv[])
 					}
 					text = argv[i + 1];
 					/* set display text */
+					driver_init();
+					lcd_clear();
+					init_freetype();
 					lcd_print_text_down_different(text, LCD_DOWN_COLOR_DIFFERENT, NULL, TEXT_ALIGN_CENTER);
 					lcd_draw_text();
 				}
