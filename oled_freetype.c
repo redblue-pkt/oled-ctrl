@@ -169,7 +169,7 @@ int lcd_print_text_up(const char* text, int color, int font_size, int align)
 	{
 		tmp = lcd_get_xres() * LCD_UP_SIZE;
 	}
-	render_lcd_text(text, up_x, up_y, 0, color, tmp, align);
+	return render_lcd_text(text, up_x, up_y, 0, color, tmp, align);
 }
 
 int lcd_print_text_center(const char* text, int color, int font_size, int align)
@@ -185,7 +185,7 @@ int lcd_print_text_center(const char* text, int color, int font_size, int align)
 	{
 		tmp = lcd_get_xres() * LCD_CENTER_SIZE;
 	}
-	render_lcd_text(text, center_x, center_y, 0, color, tmp, align);
+	return render_lcd_text(text, center_x, center_y, 0, color, tmp, align);
 }
 
 int lcd_print_text_down(const char* text, int color, int font_size, int align)
@@ -201,7 +201,7 @@ int lcd_print_text_down(const char* text, int color, int font_size, int align)
 	{
 		tmp = lcd_get_xres() * LCD_DOWN_SIZE;
 	}
-	render_lcd_text(text, down_x, down_y, 0, color, tmp, align);
+	return render_lcd_text(text, down_x, down_y, 0, color, tmp, align);
 }
 
 int lcd_print_text_up_different(const char* text, int color, int font_size, int align)
@@ -217,7 +217,7 @@ int lcd_print_text_up_different(const char* text, int color, int font_size, int 
 	{
 		tmp = lcd_get_xres() * LCD_UP_SIZE_DIFFERENT;
 	}
-	render_lcd_text(text, up_x_different, up_y_different, 0, color, tmp, align);
+	return render_lcd_text(text, up_x_different, up_y_different, 0, color, tmp, align);
 }
 
 int lcd_print_text_center_different(const char* text, int color, int font_size, int align)
@@ -233,7 +233,7 @@ int lcd_print_text_center_different(const char* text, int color, int font_size, 
 	{
 		tmp = lcd_get_xres() * LCD_CENTER_SIZE_DIFFERENT;
 	}
-	render_lcd_text(text, center_x_different, center_y_different, 0, color, tmp, align);
+	return render_lcd_text(text, center_x_different, center_y_different, 0, color, tmp, align);
 }
 
 int lcd_print_text_down_different(const char* text, int color, int font_size, int align)
@@ -248,5 +248,5 @@ int lcd_print_text_down_different(const char* text, int color, int font_size, in
 	{
 		tmp = lcd_get_xres() * LCD_DOWN_SIZE_DIFFERENT;
 	}
-	render_lcd_text(text, down_x_different, down_y_different, 0, color, tmp, align);
+	return render_lcd_text(text, down_x_different, down_y_different, 0, color, tmp, align);
 }
